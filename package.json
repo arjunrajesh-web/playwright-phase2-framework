@@ -1,0 +1,24 @@
+{
+  "name": "phase2-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anuradha-learn/phase2-starter-framework.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/anuradha-learn/phase2-starter-framework/issues"
+  },
+  "homepage": "https://github.com/anuradha-learn/phase2-starter-framework#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.4"
+  }
+}

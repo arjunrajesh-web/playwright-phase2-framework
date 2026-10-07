@@ -1,0 +1,17 @@
+
+# Playwright
+node_modules/
+test-results/
+playwright-report/
+
+# Environment and authentication
+.env
+auth/storageState.json
+
+# Backup files
+playwright.original.config.ts
+playwright.config.ts
+
+# OS files
+.DS_Store
+Thumbs.dbg
