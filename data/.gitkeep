@@ -1,0 +1,11 @@
+{
+    "compilerOperations":{
+        "target": "ES2020",
+        "module": "commomjs",
+        "moduleResolution": "node",
+        "resolvejsonModule": true,
+        "esModuleInterop": true,
+        "Strict": true,
+        "types": ["node"]
+    }
+}
