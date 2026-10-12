@@ -1,14 +1,15 @@
-import { test, expect } from '@playwright/test';
+// import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/baseFixtures';
 
 // ============================================================
 // Test Data
 // ============================================================
 
-const loginData = {
-  user: 'anuradha.learn@gmail.com',
-  password: 'Play@1234#$',
-  baseUrl: 'https://qa-cart.com/',
-};
+// const loginData = {
+//   user: 'anuradha.learn@gmail.com',
+//   password: 'Play@1234#$',
+//   baseUrl: 'https://qa-cart.com/',
+// };
 
 const billingAddress = {
   firstName: 'Anuradha',
@@ -21,30 +22,30 @@ const billingAddress = {
 // ============================================================
 // Shared Login Hook
 // ============================================================
-test.beforeEach(async ({ page }) => {
+// test.beforeEach(async ({ page }) => {
 
-    // Navigate to application
-    await page.goto(loginData.baseUrl);
+//     // Navigate to application
+//     await page.goto(loginData.baseUrl);
 
-    // Login using registered user credentials
-    await page.getByRole('textbox', {
-        name: 'Username or email address'
-    }).fill(loginData.user);
+//     // Login using registered user credentials
+//     await page.getByRole('textbox', {
+//         name: 'Username or email address'
+//     }).fill(loginData.user);
 
-    await page.getByRole('textbox', {
-        name: 'Password Required'
-    }).fill(loginData.password);
+//     await page.getByRole('textbox', {
+//         name: 'Password Required'
+//     }).fill(loginData.password);
 
-    await page.getByRole('button', {
-        name: 'Log in'
-    }).click();
+//     await page.getByRole('button', {
+//         name: 'Log in'
+//     }).click();
 
-    // Verify login succeeded
-    await expect(
-        page.getByLabel('Account pages')
-            .getByRole('link', { name: 'Log out' })
-    ).toBeVisible();
-});
+//     // Verify login succeeded
+//     await expect(
+//         page.getByLabel('Account pages')
+//             .getByRole('link', { name: 'Log out' })
+//     ).toBeVisible();
+// });
 
 // ============================================================
 // Billing Address Update Test
@@ -52,7 +53,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('Profile Management  @profile', () => {
   test(
     'registered user successfully updates billing address @regression',
-    async ({ page }) => {
+    async ({ loggedInpage:page }) => {
 
       // --------------------------------------------------------
       // Step 1 - Navigate to Billing Address Page
@@ -60,7 +61,7 @@ test.describe('Profile Management  @profile', () => {
 
       await test.step('Navigate to Billing Address page', async () => {
 
-        await page.goto('https://qa-cart.com/edit-address');
+        await page.goto('edit-address/');
 
         await expect(
           page.getByRole('heading', {
@@ -210,32 +211,32 @@ test.describe('Profile Management  @profile', () => {
       // Step 6 - Logout
       // --------------------------------------------------------
 
-      await test.step('Logout from application', async () => {
+      // await test.step('Logout from application', async () => {
 
-        const logoutLink = page
-          .getByLabel('Account pages')
-          .getByRole('link', {
-            name: 'Log out'
-          });
+      //   const logoutLink = page
+      //     .getByLabel('Account pages')
+      //     .getByRole('link', {
+      //       name: 'Log out'
+      //     });
 
-        await expect(logoutLink).toBeEnabled();
+      //   await expect(logoutLink).toBeEnabled();
 
-        await Promise.all([
-          page.waitForURL(/qa-cart/),
-          logoutLink.click()
-        ]);
+      //   await Promise.all([
+      //     page.waitForURL(/qa-cart/),
+      //     logoutLink.click()
+      //   ]);
 
-        await page.waitForLoadState(
-          'domcontentloaded'
-        );
+      //   await page.waitForLoadState(
+      //     'domcontentloaded'
+      //   );
 
-        await expect(
-          page.getByRole('button', {
-            name: 'LOG IN'
-          })
-        ).toBeVisible();
+      //   await expect(
+      //     page.getByRole('button', {
+      //       name: 'LOG IN'
+      //     })
+      //   ).toBeVisible();
 
-      });
+      // });
 
     }
   )

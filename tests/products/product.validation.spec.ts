@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-
+// import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/baseFixtures';
 // ─────────────────────────────────────────────
 // Login Test Data
 // ─────────────────────────────────────────────
@@ -23,46 +23,48 @@ const testData = {
 // Precondition:
 // Login before every test execution
 // ─────────────────────────────────────────────
-test.beforeEach(async ({ page }) => {
+// test.beforeEach(async ({ page }) => {
 
-    // Navigate to application
-    await page.goto(loginData.baseUrl);
+//     // Navigate to application
+//     await page.goto(loginData.baseUrl);
 
-    // Enter username
-    await page.getByRole('textbox', {
-        name: 'Username or email address'
-    }).fill(loginData.user);
+//     // Enter username
+//     await page.getByRole('textbox', {
+//         name: 'Username or email address'
+//     }).fill(loginData.user);
 
-    // Enter password
-    await page.getByRole('textbox', {
-        name: 'Password'
-    }).fill(loginData.password);
+//     // Enter password
+//     await page.getByRole('textbox', {
+//         name: 'Password'
+//     }).fill(loginData.password);
 
-    // Click Login button
-    await page.getByRole('button', {
-        name: 'Log in'
-    }).click();
+//     // Click Login button
+//     await page.getByRole('button', {
+//         name: 'Log in'
+//     }).click();
 
-    // Verify successful login
-    await expect(
-        page.getByLabel('Account pages')
-            .getByRole('link', { name: 'Log out' })
-    ).toBeVisible();
+//     // Verify successful login
+//     await expect(
+//         page.getByLabel('Account pages')
+//             .getByRole('link', { name: 'Log out' })
+//     ).toBeVisible();
 
-});
+// });
 
 // ─────────────────────────────────────────────
 // Test: View Product Details in New Tab
 // ─────────────────────────────────────────────
 test.describe('Products — product detail new tab @products', () => {
-test('registered user views product details in new tab @regression', async ({ page }) => {
+test('registered user views product details in new tab @regression', async ({ loggedInpage:page }) => {
 
     // Step 1: Navigate to DemoShop page
     await test.step('Navigate to DemoShop', async () => {
 
-        await page.getByRole('link', {
-            name: 'DemoShop'
-        }).click();
+        page.goto("demoshop/")
+
+        // await page.getByRole('link', {
+        //     name: 'DemoShop'
+        // }).click();
 
         // Verify user reaches Shop page
         await expect(page).toHaveURL(/shop/);

@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-
+// import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/baseFixtures';
 // ======================================================
 // Test Data
 // ======================================================
@@ -24,28 +24,28 @@ let orderId: string | undefined;
 // Common Setup — Login before every test
 // ======================================================
 
-test.beforeEach(async ({ page }) => {
+// test.beforeEach(async ({ page }) => {
 
-    await page.goto(loginData.baseUrl);
+//     await page.goto(loginData.baseUrl);
 
-    await page.getByRole('textbox', {
-        name: 'Username or email address'
-    }).fill(loginData.username);
+//     await page.getByRole('textbox', {
+//         name: 'Username or email address'
+//     }).fill(loginData.username);
 
-    await page.getByRole('textbox', {
-        name: 'Password  Required'
-    }).fill(loginData.password);
+//     await page.getByRole('textbox', {
+//         name: 'Password  Required'
+//     }).fill(loginData.password);
 
-    await page.getByRole('button', {
-        name: 'Log in'
-    }).click();
+//     await page.getByRole('button', {
+//         name: 'Log in'
+//     }).click();
 
-    await expect(
-        page.getByLabel('Account pages')
-            .getByRole('link', { name: 'Log out' })
-    ).toBeVisible();
+//     await expect(
+//         page.getByLabel('Account pages')
+//             .getByRole('link', { name: 'Log out' })
+//     ).toBeVisible();
 
-});
+// });
 
 // ======================================================
 // Checkout Journey — Registered User Purchase Flow
@@ -55,14 +55,16 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
 
     test(
         'registered user searches filters purchases product and verifies order @smoke @regression @critical',
-        async ({ page }) => {
+        async ({ loggedInpage: page }) => {
 
             // ──────────────────────────────────────────
             // Step 1 — Open DemoShop
             // ──────────────────────────────────────────
             await test.step('Open DemoShop page', async () => {
 
-                await page.getByRole('link', { name: 'DemoShop' }).click();
+                page.goto("demoshop/")
+
+                // await page.getByRole('link', { name: 'DemoShop' }).click();
 
                 await expect(
                     page.getByRole('heading', { name: 'DemoShop' })
@@ -288,11 +290,11 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
             // ──────────────────────────────────────────
             // Step 7 — Logout
             // ──────────────────────────────────────────
-            await test.step('Logout from application', async () => {
+            // await test.step('Logout from application', async () => {
 
-                await page.getByRole('link', { name: 'Log out' }).click();
+            //     await page.getByRole('link', { name: 'Log out' }).click();
 
-            });
+            // });
 
         }
     );
