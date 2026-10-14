@@ -1,4 +1,4 @@
-import {test as setup,expect} from '@playwright/test'
+import { test as setup, expect } from '@playwright/test'
 import path from 'path'
 
 
@@ -6,15 +6,17 @@ import path from 'path'
 const authFile = path.join(__dirname, '..', 'auth', 'storageState.json')
 
 // login credations
+
 const loginData = {
-    user: 'arjun.rajesh',
-    password: 'Arjun123$',
-    baseUrl: 'https://qa-cart.com/',
+    user: process.env.DEMO_USER!,
+    password: process.env.DEMO_PASS!,
+    baseUrl: process.env.BASE_URL!
 };
+
 
 // setup :authentaion once and save session
 
-setup("authenticate and save session",async({page,context})=>{
+setup("authenticate and save session", async ({ page, context }) => {
     await page.goto(loginData.baseUrl);
 
     await page.getByRole('textbox', {
@@ -34,5 +36,5 @@ setup("authenticate and save session",async({page,context})=>{
             .getByRole('link', { name: 'Log out' })
     ).toBeVisible();
 
-    await context.storageState({path:authFile})
+    await context.storageState({ path: authFile })
 })
