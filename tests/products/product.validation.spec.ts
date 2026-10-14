@@ -12,12 +12,12 @@ const loginData = {
 // ─────────────────────────────────────────────
 // Product Test Data
 // ─────────────────────────────────────────────
-const testData = {
-    product: {
-        name: 'Assorted Coffee',
-        expectedUrl: /assorted-coffee/
-    }
-};
+// const testData = {
+//     product: {
+//         name: 'Assorted Coffee',
+//         expectedUrl: /assorted-coffee/
+//     }
+// };
 
 // ─────────────────────────────────────────────
 // Precondition:

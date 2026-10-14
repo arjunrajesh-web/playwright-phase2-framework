@@ -10,12 +10,12 @@ const loginData = {
     password: 'Play@1234#$',
 };
 
-const testData = {
-    search: {
-        keyword: 'organic',
-        maxPrice: '$25',
-    },
-};
+// const testData = {
+//     search: {
+//         keyword: 'organic',
+//         maxPrice: '$25',
+//     },
+// };
 
 // Variable to store dynamically generated order ID
 let orderId: string | undefined;
