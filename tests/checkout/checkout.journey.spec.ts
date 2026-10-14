@@ -1,5 +1,6 @@
 // import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
+import searchData from '../../data/search.json'
 // ======================================================
 // Test Data
 // ======================================================
@@ -19,6 +20,7 @@ const loginData = {
 
 // Variable to store dynamically generated order ID
 let orderId: string | undefined;
+const search = searchData[0]
 
 // ======================================================
 // Common Setup — Login before every test
@@ -82,13 +84,13 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
             await test.step('Search for products', async () => {
 
                 await page.getByRole('searchbox', { name: 'Search' })
-                    .fill(testData.search.keyword);
+                    .fill(search.keyword);
 
                 await page.getByRole('button', { name: 'Search' }).click();
 
                 await expect(
                     page.getByRole('heading', {
-                        name: `Search results: “${testData.search.keyword}”`
+                        name: `Search results: “${search.keyword}”`
                     })
                 ).toBeVisible();
 
@@ -102,7 +104,7 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
                         .getByRole('heading')
                         .textContent();
                     expect(title?.toLowerCase())
-                        .toContain(testData.search.keyword.toLowerCase());
+                        .toContain(search.keyword.toLowerCase());
                 }
 
             });
@@ -114,11 +116,11 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
 
                 await page.getByRole('textbox', {
                     name: 'Filter products by maximum'
-                }).fill(testData.search.maxPrice);
+                }).fill(search.maxPrice);
 
                 // Convert "$25" to numeric 25 for comparison
                 const maxPriceNum = Number(
-                    testData.search.maxPrice.replace('$', '')
+                    search.maxPrice.replace('$', '')
                 );
 
                 await page.getByText(`Up to $${maxPriceNum}`)

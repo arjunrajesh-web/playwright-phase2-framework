@@ -1,5 +1,6 @@
 // import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
+import address from '../../data/address.json'
 
 // ============================================================
 // Test Data
@@ -46,7 +47,7 @@ import { test, expect } from '../../fixtures/baseFixtures';
 //             .getByRole('link', { name: 'Log out' })
 //     ).toBeVisible();
 // });
-
+const billingAddress=address[0]
 // ============================================================
 // Billing Address Update Test
 // ============================================================
