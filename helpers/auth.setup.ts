@@ -15,14 +15,12 @@ const baseUrl = process.env.BASE_URL
 const username = process.env.DEMO_USER
 const password = process.env.DEMO_PASS
 
-// Check whether all required environment variables exist
 if (!baseUrl || !username || !password) {
     throw new Error(
         'BASE_URL, DEMO_USER, or DEMO_PASS is missing'
     )
 }
 
-// Log in and save the session
 setup('authenticate and save session', async ({ page, context }) => {
 
     // Open the website
@@ -38,21 +36,15 @@ setup('authenticate and save session', async ({ page, context }) => {
         name: 'Password  Required'
     }).fill(password)
 
-    // Click the login button
+    // Click Log in
     await page.getByRole('button', {
         name: 'Log in'
     }).click()
 
-    // Wait for the account's Log out link to appear
-    await expect(
-        page.getByLabel('Account pages')
-            .getByRole('link', { name: 'Log out' })
-    ).toBeVisible()
-
-    // Wait briefly before collecting debug information
+    // Allow the page to respond after login
     await page.waitForTimeout(3000)
 
-    // Print debug information in the terminal / GitHub Actions log
+    // Print diagnostic information
     console.log('Current URL:', page.url())
     console.log('Page title:', await page.title())
     console.log(
@@ -60,11 +52,17 @@ setup('authenticate and save session', async ({ page, context }) => {
         (await page.locator('body').innerText()).slice(0, 1500)
     )
 
-    // Save a screenshot for debugging
+    // Save screenshot before the assertion can fail
     await page.screenshot({
         path: 'test-results/after-login.png',
         fullPage: true
     })
+
+    // Verify successful login
+    await expect(
+        page.getByLabel('Account pages')
+            .getByRole('link', { name: 'Log out' })
+    ).toBeVisible()
 
     // Save the authenticated browser session
     await context.storageState({
