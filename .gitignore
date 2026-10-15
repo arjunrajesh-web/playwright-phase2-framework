@@ -9,7 +9,7 @@ playwright-report/
 auth/storageState.json
 
 # Backup files
-playwright.original.config.ts
+playwright.orginal.config.ts
 playwright.config.ts
 
 # OS files
