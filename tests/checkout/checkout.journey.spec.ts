@@ -20,7 +20,7 @@ const loginData = {
 
 // Variable to store dynamically generated order ID
 let orderId: string | undefined;
-const search = searchData[0]
+
 
 // ======================================================
 // Common Setup — Login before every test
@@ -55,8 +55,9 @@ const search = searchData[0]
 
 test.describe('Checkout — registered user purchase journey @checkout @journey', () => {
 
-    test(
-        'registered user searches filters purchases product and verifies order @smoke @regression @critical',
+    searchData.forEach((search)=>{
+
+    test( `registered user searches for ${search.keyword} and ${search.maxPrice} filters purchases product and verifies order @smoke @regression @critical`,
         async ({ loggedInpage: page }) => {
 
             // ──────────────────────────────────────────
@@ -300,5 +301,7 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
 
         }
     );
+})
+
 
 });

@@ -41,22 +41,7 @@ setup('authenticate and save session', async ({ page, context }) => {
         name: 'Log in'
     }).click()
 
-    // Allow the page to respond after login
-    await page.waitForTimeout(3000)
-
-    // Print diagnostic information
-    console.log('Current URL:', page.url())
-    console.log('Page title:', await page.title())
-    console.log(
-        'Page content:',
-        (await page.locator('body').innerText()).slice(0, 1500)
-    )
-
-    // Save screenshot before the assertion can fail
-    await page.screenshot({
-        path: 'test-results/after-login.png',
-        fullPage: true
-    })
+    
 
     // Verify successful login
     await expect(
