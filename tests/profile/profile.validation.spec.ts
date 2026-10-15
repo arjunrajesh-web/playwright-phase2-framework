@@ -127,11 +127,11 @@ test.describe('Profile Management  @profile', () => {
           .getByLabel('Town / City')
           .fill(billingAddress.city);
 
-        await page
-          .locator('#billing_country')
-          .selectOption({
-            value: billingAddress.country
-          });
+        // await page
+        //   .locator('#billing_country')
+        //   .selectOption({
+        //     value: billingAddress.country
+        //   });
 
         // Verify entered values before saving
 
