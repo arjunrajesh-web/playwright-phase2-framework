@@ -10,7 +10,7 @@ auth/storageState.json
 
 # Backup files
 playwright.orginal.config.ts
-playwright.config.ts
+# playwright.config.ts
 
 # OS files
 .DS_Store
