@@ -1,6 +1,9 @@
 // import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
-import address from '../../data/address.json'
+// import address from '../../data/address.json'
+import { readExcel } from '../../utils/excel-reader';
+import { AddressData } from '../../utils/types'; 
+const addresses=readExcel<AddressData>('addresses.xlsx')
 
 // ============================================================
 // Test Data
@@ -47,14 +50,16 @@ import address from '../../data/address.json'
 //             .getByRole('link', { name: 'Log out' })
 //     ).toBeVisible();
 // });
-const billingAddress=address[0]
+// const billingAddress=address[0]
 // ============================================================
 // Billing Address Update Test
 // ============================================================
 test.describe('Profile Management  @profile', () => {
-  test(
-    'registered user successfully updates billing address @regression',
-    async ({ loggedInpage:page }) => {
+ addresses.forEach((billingAddress) => {
+    test(
+      `registered user for ${billingAddress.firstName} in ${billingAddress.city} successfully updates billing address @regression`,
+      async ({ loggedInpage: page }) => {
+
 
       // --------------------------------------------------------
       // Step 1 - Navigate to Billing Address Page
@@ -241,5 +246,6 @@ test.describe('Profile Management  @profile', () => {
 
     }
   )
+})
 }
 )
