@@ -1,3 +1,4 @@
+```yaml
 name: Playwright Tests
 
 on:
@@ -12,27 +13,50 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Get the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # Step 2: Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
+      # Step 3: Install project dependencies
       - name: Install dependencies
         run: npm ci
 
+      # Step 4: Install Playwright and Chromium dependencies
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      # Step 5: Run authentication setup and save the login session
+      - name: Run authentication setup
+        run: npx playwright test --project=setup
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL }}
           DEMO_USER: ${{ secrets.DEMO_USER }}
           DEMO_PASS: ${{ secrets.DEMO_PASS }}
 
+      # Step 6: Verify that the session file was created
+      - name: Verify authentication state file
+        run: |
+          ls -la auth/
+          test -f auth/storageState.json
+
+      # Step 7: Run the main Chromium tests
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+        env:
+          CI: true
+          BASE_URL: ${{ secrets.BASE_URL }}
+          DEMO_USER: ${{ secrets.DEMO_USER }}
+          DEMO_PASS: ${{ secrets.DEMO_PASS }}
+
+      # Step 8: Upload the HTML report, even if tests fail
       - name: Upload report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -40,3 +64,4 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+```
