@@ -2,6 +2,7 @@
 import { test as setup, expect } from '@playwright/test'
 import fs from 'node:fs'
 import path from 'node:path'
+import { LOginPage } from '../pages/LoginPage'
 
 // Location where the login session will be saved
 const authDir = path.join(__dirname, '..', 'auth')
@@ -22,19 +23,24 @@ if (!baseUrl || !username || !password) {
 }
 
 setup('authenticate and save session', async ({ page, context }) => {
+  
+const LoginPage = new LOginPage(page)
 
     // Open the website
     await page.goto(baseUrl)
 
-    // Enter username
-    await page.getByRole('textbox', {
-        name: 'Username or email address'
-    }).fill(username)
+    await LoginPage.Login(username,password)
 
+    // Enter username
+    // await page.getByRole('textbox', {
+    //     name: 'Username or email address'
+    // }).fill(username)
+
+    
     // Enter password
-    await page.getByRole('textbox', {
-        name: 'Password  Required'
-    }).fill(password)
+    // await page.getByRole('textbox', {
+    //     name: 'Password  Required'
+    // }).fill(password)
 
     // Click Log in
     await page.getByRole('button', {
