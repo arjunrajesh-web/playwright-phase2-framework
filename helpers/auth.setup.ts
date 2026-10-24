@@ -23,37 +23,18 @@ if (!baseUrl || !username || !password) {
 }
 
 setup('authenticate and save session', async ({ page, context }) => {
-  
-const LoginPage = new LOginPage(page)
+
+    const LoginPage = new LOginPage(page)
 
     // Open the website
-    await page.goto(baseUrl)
+    await LoginPage.navigate(baseUrl)
 
-    await LoginPage.Login(username,password)
+    // enter login creditionals
+    await LoginPage.Login(username, password)
 
-    // Enter username
-    // await page.getByRole('textbox', {
-    //     name: 'Username or email address'
-    // }).fill(username)
+    // verify logged in
+    await LoginPage.verifyLoggedIn()
 
-    
-    // Enter password
-    // await page.getByRole('textbox', {
-    //     name: 'Password  Required'
-    // }).fill(password)
-
-    // Click Log in
-    await page.getByRole('button', {
-        name: 'Log in'
-    }).click()
-
-    
-
-    // Verify successful login
-    await expect(
-        page.getByLabel('Account pages')
-            .getByRole('link', { name: 'Log out' })
-    ).toBeVisible()
 
     // Save the authenticated browser session
     await context.storageState({
