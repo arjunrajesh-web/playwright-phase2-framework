@@ -32,6 +32,10 @@ export class LOginPage {
         .getByRole('link', { name: 'Log out' })
     }
 
+    private loginbutton= this.page.getByRole('button', {
+        name: 'Log in'
+    })
+
 
     // Actions = Public ,called by test and setup
 
