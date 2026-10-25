@@ -1,6 +1,7 @@
 // import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
 import product from '../../data/product.json'
+import { ProductPage } from '../../pages/ProductPage';
 // ─────────────────────────────────────────────
 // Login Test Data
 // ─────────────────────────────────────────────
@@ -51,65 +52,62 @@ const loginData = {
 //     ).toBeVisible();
 
 // });
-const productdata =product[0]
+const productdata = product[0]
 // ─────────────────────────────────────────────
 // Test: View Product Details in New Tab
 // ─────────────────────────────────────────────
 test.describe('Products — product detail new tab @products', () => {
-test('registered user views product details in new tab @regression', async ({ loggedInpage:page }) => {
+    test('registered user views product details in new tab @regression', async ({ loggedInpage: page }) => {
 
-    // Step 1: Navigate to DemoShop page
-    await test.step('Navigate to DemoShop', async () => {
+        // Step 1: Navigate to DemoShop page
+        await test.step('Navigate to DemoShop', async () => {
 
-        page.goto("demoshop/")
+            page.goto("demoshop/")
 
-        // await page.getByRole('link', {
-        //     name: 'DemoShop'
-        // }).click();
+            // await page.getByRole('link', {
+            //     name: 'DemoShop'
+            // }).click();
 
-        // Verify user reaches Shop page
-        await expect(page).toHaveURL(/shop/);
-    });
+            // Verify user reaches Shop page
+            await expect(page).toHaveURL(/shop/);
+        });
 
-    // page.context().waitForEvent('page')
+        // page.context().waitForEvent('page')
 
-    // Step 2: Open product in a new tab and validate details
-    await test.step('Open product details and validate', async () => {
+        // Step 2: Open product in a new tab and validate details
+        await test.step('Open product details and validate', async () => {
 
-        // Locate the product link
-        const productLink = page
-            .getByRole('link', { name:productdata.name })
-            .first();
+            // Locate the product link
+            const productLink = page
+                .getByRole('link', { name: productdata.name })
+                .first();
 
-        // Verify the link is configured to open in a new tab
-        await expect(productLink).toHaveAttribute('target', '_blank');
+            // Verify the link is configured to open in a new tab
+            await expect(productLink).toHaveAttribute('target', '_blank');
 
-        // Listen for the new page event BEFORE clicking the link
-        // Promise.all prevents a race condition where the tab opens
-        // before Playwright starts listening for it.
-        const [productTab] = await Promise.all([
-            page.context().waitForEvent('page'),
-            productLink.click()
-        ]);
+            // Listen for the new page event BEFORE clicking the link
+            // Promise.all prevents a race condition where the tab opens
+            // before Playwright starts listening for it.
+            const [productTab] = await Promise.all([
+                page.context().waitForEvent('page'),
+                productLink.click()
+            ]);
 
-        // console.log(productTab)
+            // console.log(productTab)
 
-        // Wait until the new page finishes loading
-        await productTab.waitForLoadState();
+            // Wait until the new page finishes loading
+            await productTab.waitForLoadState();
 
-        // Verify product heading is displayed
-        await expect(
-            productTab.getByRole('heading', {
-                name:productdata.name
-            })
-        ).toBeVisible();
+            const productpage = new ProductPage(productTab)
 
-        // Verify correct product page URL
-        await expect(productTab)
-            .toHaveURL(new RegExp(productdata.expectedUrl));
+            // Verify product heading is displayed
+            await productpage.verifyproductName(product[0].name)
 
-        // Close the product tab
-        await productTab.close();
-    });
-})
+            // Verify correct product page URL
+            await productpage.verifyURL(product[0].expectedUrl)
+
+            // Close the product tab
+            await productTab.close();
+        });
+    })
 })
