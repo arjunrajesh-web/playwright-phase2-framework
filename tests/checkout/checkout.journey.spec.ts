@@ -1,6 +1,7 @@
 // import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
 import searchData from '../../data/search.json'
+import { ShopPage } from '../../pages/ShopPage';
 // ======================================================
 // Test Data
 // ======================================================
@@ -59,6 +60,8 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
 
     test( `registered user searches for ${search.keyword} and ${search.maxPrice} filters purchases product and verifies order @smoke @regression @critical`,
         async ({ loggedInpage: page }) => {
+
+            const shopPage = new 
 
             // ──────────────────────────────────────────
             // Step 1 — Open DemoShop
