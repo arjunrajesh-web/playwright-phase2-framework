@@ -1,55 +1,8 @@
-// import { test, expect } from '@playwright/test';
 import { test, expect } from '../../fixtures/baseFixtures';
 import searchData from '../../data/search.json'
-import { ShopPage } from '../../pages/ShopPage'
+import { ShopPage } from '../../pages/ShopPage';
 import { CheckoutPage } from '../../pages/CheckoutPage';
-// ======================================================
-// Test Data
-// ======================================================
-
-const loginData = {
-    baseUrl: 'https://qa-cart.com/',
-    username: 'anuradha.learn@gmail.com',
-    password: 'Play@1234#$',
-};
-
-// const testData = {
-//     search: {
-//         keyword: 'organic',
-//         maxPrice: '$25',
-//     },
-// };
-
-// Variable to store dynamically generated order ID
-let orderId: string | undefined;
-
-
-// ======================================================
-// Common Setup — Login before every test
-// ======================================================
-
-// test.beforeEach(async ({ page }) => {
-
-//     await page.goto(loginData.baseUrl);
-
-//     await page.getByRole('textbox', {
-//         name: 'Username or email address'
-//     }).fill(loginData.username);
-
-//     await page.getByRole('textbox', {
-//         name: 'Password  Required'
-//     }).fill(loginData.password);
-
-//     await page.getByRole('button', {
-//         name: 'Log in'
-//     }).click();
-
-//     await expect(
-//         page.getByLabel('Account pages')
-//             .getByRole('link', { name: 'Log out' })
-//     ).toBeVisible();
-
-// });
+import { Orderpage } from '../../pages/OrdersPage';
 
 // ======================================================
 // Checkout Journey — Registered User Purchase Flow
@@ -58,45 +11,44 @@ let orderId: string | undefined;
 test.describe('Checkout — registered user purchase journey @checkout @journey', () => {
 
     searchData.forEach((search) => {
-
-        test(`registered user searches for ${search.keyword} and ${search.maxPrice} filters purchases product and verifies order @smoke @regression @critical`,
+        test(
+            `registered user searches for ${search.keyword} and ${search.maxPrice} filters purchases product and verifies order @smoke @regression @critical`,
+            
             async ({ loggedInpage: page }) => {
 
-                const shopPage = new ShopPage(page)
+            test.info().annotations.push({type:'Search keyword', description:search.keyword})
+            test.info().annotations.push({ type: 'Max price', description: search.maxPrice });
+            test.info().annotations.push({ type: 'Environment', description: 'staging' });
 
-            // ──────────────────────────────────────────
-            // Step 1 — Open DemoShop
-            // ──────────────────────────────────────────
-           await test.step('Open DemoShop page', async () => {
 
-                   await shopPage.navigate()
 
+
+                let orderId: string | undefined;
+
+                const shopPage = new ShopPage(page);
+                const checkoutPage=new CheckoutPage(page)
+                const orderPage=new Orderpage(page)
+
+
+
+                // ── Step 1: Open DemoShop ─────────────
+                await test.step('Open DemoShop page', async () => {
+                    await shopPage.navigate();
                 });
 
-                // ──────────────────────────────────────────
-                // Step 2 — Search for products
-                // ──────────────────────────────────────────
+                // ── Step 2: Search ────────────────────
                 await test.step('Search for products', async () => {
-
-                   await shopPage.search(search.keyword)
-
+                    await shopPage.search(search.keyword);
                 });
 
-                // ──────────────────────────────────────────
-                // Step 3 — Apply maximum price filter
-                // ──────────────────────────────────────────
+                // ── Step 3: Price filter ──────────────
                 await test.step('Apply maximum price filter', async () => {
-
                     await shopPage.applyPriceFilter(search.maxPrice);
                 });
 
-                // ──────────────────────────────────────────
-                // Step 4 — Add first product to cart
-                // ──────────────────────────────────────────
-                await test.step('Add product to cart', async () => {
-
+                // ── Step 4: Add to cart ───────────────
+                await test.step('Add filtered product to cart', async () => {
                     await shopPage.addFirstProductToCart();
-
                 });
 
                 // ──────────────────────────────────────────
@@ -105,43 +57,46 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
                 await test.step('Checkout and place order', async () => {
 
                     // Proceed to checkout
-                    const checkoutButton = page.getByRole('link', {
-                        name: /proceed to checkout/i
-                    });
-                    await expect(checkoutButton).toBeEnabled();
-                    await Promise.all([
-                        page.waitForURL(/checkout/),
-                        checkoutButton.click()
-                    ]);
+                    // const checkoutButton = page.getByRole('link', {
+                    //     name: /proceed to checkout/i
+                    // });
+                    // await expect(checkoutButton).toBeEnabled();
+                    // await Promise.all([
+                    //     page.waitForURL(/checkout/),
+                    //     checkoutButton.click()
+                    // ]);
+                    await checkoutPage.proceedToCheckout()
 
                     // Place order
-                    const placeOrderButton = page.getByRole('button', {
-                        name: /place order/i
-                    });
-                    await expect(placeOrderButton).toBeEnabled();
-                    await Promise.all([
-                        page.waitForURL(/order-received/),
-                        placeOrderButton.click()
-                    ]);
+                    // const placeOrderButton = page.getByRole('button', {
+                    //     name: /place order/i
+                    // });
+                    // await expect(placeOrderButton).toBeEnabled();
+                    // await Promise.all([
+                    //     page.waitForURL(/order-received/),
+                    //     placeOrderButton.click()
+                    // ]);
 
-                    await page.waitForLoadState('domcontentloaded');
+                    // await page.waitForLoadState('domcontentloaded');
 
-                    await expect(
-                        page.getByText('Thank you. Your order has')
-                    ).toBeVisible();
-
+                    // await expect(
+                    //     page.getByText('Thank you. Your order has')
+                    // ).toBeVisible();
+                    await checkoutPage.placeOrder()
                     // Capture dynamically generated order ID
-                    orderId = await page.getByRole('listitem')
-                        .filter({ hasText: 'Order number:' })
-                        .locator('strong')
-                        .textContent() || undefined;
+                    // orderId = await page.getByRole('listitem')
+                    //     .filter({ hasText: 'Order number:' })
+                    //     .locator('strong')
+                    //     .textContent() || undefined;
 
-                    expect(
-                        orderId,
-                        'Order ID could not be read from the confirmation page'
-                    ).toBeTruthy();
+                    // expect(
+                    //     orderId,
+                    //     'Order ID could not be read from the confirmation page'
+                    // ).toBeTruthy();
 
-                    console.log(`Order placed: ${orderId}`);
+                    // console.log(`Order placed: ${orderId}`);
+                    orderId=await checkoutPage.captureOrderId()
+                    await test.info().attach ('OrderID',{body:orderId})
 
                 });
 
@@ -150,74 +105,89 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
                 // ──────────────────────────────────────────
                 await test.step('Verify order is available in order history', async () => {
 
-                    // Navigate to My Account
-                    const myAccountLink = page.getByRole('link', {
-                        name: /my account/i
-                    });
-                    await Promise.all([
-                        page.waitForURL(/qa-cart.com/),
-                        myAccountLink.click()
-                    ]);
+        //     //         // Navigate to My Account
+        //     //         const myAccountLink = page.getByRole('link', {
+        //     //             name: /my account/i
+        //     //         });
 
-                    // Navigate to Orders
-                    const ordersLink = page.getByRole('link', {
-                        name: 'Orders',
-                        exact: true
-                    });
-                    await Promise.all([
-                        page.waitForURL(/orders/),
-                        ordersLink.click()
-                    ]);
+        //     //         // Before — flaky
+        //     //         // await Promise.all([
+        //     //         //     page.waitForURL(/qa-cart.com/),
+        //     //         //     myAccountLink.click()
+        //     //         // ]);
 
-                    await page.waitForLoadState('domcontentloaded');
+        //     //         // After — reliable
+        //     //         myAccountLink.click()
+        //     //         await page.waitForLoadState('domcontentloaded');
 
-                    // Verify orders table is visible
-                    const ordersTable = page.getByRole('table');
-                    await expect(ordersTable).toBeVisible();
 
-                    // Find the row for the specific order
-                    const orderRow = ordersTable.getByRole('row')
-                        .filter({
-                            has: page.getByRole('link', {
-                                name: `View order number ${orderId}`
-                            })
-                        });
 
-                    // Verify view order link is visible
-                    const viewOrderLink = orderRow.getByRole('link', {
-                        name: `View order ${orderId}`
-                    });
-                    await expect(viewOrderLink).toBeVisible();
+        //     //         // Navigate to Orders
+        //     //         const ordersLink = page.getByRole('link', {
+        //     //             name: 'Orders',
+        //     //             exact: true
+        //     //         });
 
-                    // Open order detail page
-                    await Promise.all([
-                        page.waitForURL(/view-order/),
-                        viewOrderLink.click()
-                    ]);
 
-                    await page.waitForLoadState('domcontentloaded');
 
-                    // Verify correct order page opened
-                    await expect(
-                        page.getByRole('heading', {
-                            name: `Order #${orderId}`
-                        })
-                    ).toBeVisible();
+        //     //         // Before — flaky  
+        //     //         // await Promise.all([
+        //     //         //     page.waitForURL(/orders/),
+        //     //         //     ordersLink.click()
+        //     //         // ]);
 
-                });
 
-                // ──────────────────────────────────────────
-                // Step 7 — Logout
-                // ──────────────────────────────────────────
-                // await test.step('Logout from application', async () => {
 
-                //     await page.getByRole('link', { name: 'Log out' }).click();
+        //     //         // After — reliable
+        //     //         await ordersLink.click();
+        //     //         await page.waitForURL(/orders/);
+        //     //         await page.waitForLoadState('domcontentloaded')
 
-                // });
+
+        //     //         // Verify orders table is visible
+        //     //         const ordersTable = page.getByRole('table');
+        //     //         await expect(ordersTable).toBeVisible();
+
+        //     //         // Find the row for the specific order
+        //     //         const orderRow = ordersTable.getByRole('row')
+        //     //             .filter({
+        //     //                 has: page.getByRole('link', {
+        //     //                     name: `View order number ${orderId}`
+        //     //                 })
+        //     //             });
+
+        //     //         // Verify view order link is visible
+        //     //         const viewOrderLink = orderRow.getByRole('link', {
+        //     //             name: `View order ${orderId}`
+        //     //         });
+        //     //         await expect(viewOrderLink).toBeVisible();
+
+        //     //         // Open order detail page
+        //     //         await Promise.all([
+        //     //             page.waitForURL(/view-order/),
+        //     //             viewOrderLink.click()
+        //     //         ]);
+
+        //     //         await page.waitForLoadState('domcontentloaded');
+
+        //     //         // Verify correct order page opened
+        //     //         await expect(
+        //     //             page.getByRole('heading', {
+        //     //                 name: `Order #${orderId}`
+        //     //             })
+        //     //         ).toBeVisible();
+
+        //     //     });
+
+                  await orderPage.navigate()
+                  await orderPage.verifyOrderExists(orderId!)  
 
             }
         );
+
+        
+
     })
 
-
+})
 });
