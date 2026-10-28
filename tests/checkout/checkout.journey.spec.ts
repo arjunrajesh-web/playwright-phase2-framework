@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/baseFixtures';
 import searchData from '../../data/search.json'
 import { ShopPage } from '../../pages/ShopPage';
 import { CheckoutPage } from '../../pages/CheckoutPage';
-import { Orderpage } from '../../pages/OrdersPage';
+import { OrdersPage } from '../../pages/OrdersPage';
 
 // ======================================================
 // Checkout Journey — Registered User Purchase Flow
@@ -27,7 +27,7 @@ test.describe('Checkout — registered user purchase journey @checkout @journey'
 
                 const shopPage = new ShopPage(page);
                 const checkoutPage=new CheckoutPage(page)
-                const orderPage=new Orderpage(page)
+                const orderPage=new OrdersPage(page)
 
 
 

@@ -16,6 +16,12 @@ export default defineConfig({
     forbidOnly: isCI,
     retries: isCI ? 1 : 0,
     reporter: [['html', { open: 'never' }]],
+    use:{
+
+        screenshot:'only-on-failure',
+        video:"retain-on-failure",
+        trace:"on-first-retry"
+    },
 
     projects: [
         {

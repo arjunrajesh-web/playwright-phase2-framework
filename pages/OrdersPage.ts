@@ -1,30 +1,44 @@
-import { Page, expect } from '@playwright/test'
+import { Page, expect } from '@playwright/test';
 
-export class Orderpage {
-    constructor(private page: Page) {
+export class OrdersPage {
+    constructor(private page: Page) {}
 
-    }
 
+    // ─────────────────────────────────────────────
+    // Locators
+    // ─────────────────────────────────────────────
 
     private get myAccountLink() {
-        return this.page.getByRole('link', {
-            name: /my account/i
-        })
+        return this.page.getByRole('link', { name: /my account/i });
     }
 
-    private get orderLink() {
+    private get ordersLink() {
         return this.page.getByRole('link', {
             name: 'Orders',
             exact: true
-        })
+        });
     }
+
 
     private get ordersTable() {
         return this.page.getByRole('table');
     }
 
+    // ─────────────────────────────────────────────
+    // Actions
+    // ─────────────────────────────────────────────
 
-    
+    async navigate(){
+
+    await this.myAccountLink.click();
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.ordersLink.click();
+    await this.page.waitForURL(/orders/);
+    await this.page.waitForLoadState('domcontentloaded');
+    await expect(this.ordersTable).toBeVisible();
+
+    }
+
     async verifyOrderExists(orderId:string){
 
         
@@ -59,4 +73,4 @@ export class Orderpage {
 
     }
 
-} 
+}
