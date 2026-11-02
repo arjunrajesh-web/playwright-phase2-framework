@@ -17,12 +17,15 @@ export const test = base.extend<AuthFixtures>({
     // STEP 4: Start creating our loggedInpage fixture
     // browser is provided automatically by Playwright
     // use allows us to give the prepared page to the test
-    loggedInpage: async ({ browser }, use) => {
+    loggedInpage: async ({ browser }, use, testInfo) => {
 
         // STEP 5: Create a new browser session
         // Load saved login information from storageState.json
-        const context: BrowserContext =  await browser.newContext({
-            storageState: authFile
+        const context: BrowserContext = await browser.newContext({
+            storageState: authFile,
+            recordVideo: {
+                dir: testInfo.outputDir
+            }
         })
 
         // STEP 6: Create a new browser tab inside that session
@@ -35,6 +38,22 @@ export const test = base.extend<AuthFixtures>({
         // STEP 8: After the test finishes, close the browser session
         // This cleans up the context created by this fixture
         await context.close()
+        if (testInfo.status != 'passed') {
+
+            const videoPath = await page.video()?.path()
+            if (videoPath) {
+                await testInfo.attach('video', {
+                    path: videoPath,
+                    contentType: 'video/webm'
+                })
+            }
+
+        }
+        else {
+
+            await page.video()?.delete()
+        }
+
     }
 })
 

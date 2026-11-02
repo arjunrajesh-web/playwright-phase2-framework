@@ -14,8 +14,8 @@ export default defineConfig({
     timeout: 40 * 1000,
     expect: { timeout: 40 * 1000 },
     forbidOnly: isCI,
-    retries: isCI ? 1 : 0,
-    reporter: [['html', { open: 'never' }]],
+    retries:process.env.CI ? 1 : 0,
+    reporter: [['html'],['allure-playwright']],
     use:{
 
         screenshot:'only-on-failure',

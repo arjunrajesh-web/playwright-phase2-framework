@@ -8,6 +8,10 @@ playwright-report/
 .env
 auth/storageState.json
 
+# Allure
+allure-results/
+allure-report/
+
 # Backup files
 playwright.orginal.config.ts
 # playwright.config.ts
