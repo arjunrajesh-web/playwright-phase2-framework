@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/baseFixtures';
 
 //read from JSON
 import addresses from '../../data/address.json'
-import {AddressPage} from '../../pages/Addresspage'
+import { AddressPage } from '../../pages/Addresspage'
 
 //read from Excel
 // import { readExcel } from '../../utils/excel-reader';
@@ -49,8 +49,8 @@ test.describe('Profile Management  @profile', () => {
 
           await addressPage.fillBillingAddress(billingAddress)
           await test.info().attach('Address used', {
-body: `${billingAddress.firstName}, ${billingAddress.city}`
-})
+            body: `${billingAddress.firstName}, ${billingAddress.city}`
+          })
 
         });
 

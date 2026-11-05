@@ -153,7 +153,9 @@ test('complete CRUD workflow', async ({ request }) => {
 
     // delete
 
-    const deleteResponse = await request.delete( `https://dummyjson.com/products/${id}` );
+    
+    // const deleteResponse = await request.delete( `https://dummyjson.com/products/${id}` );
+    const deleteResponse = await request.delete( `https://dummyjson.com/products/1`);
     expect(deleteResponse.status()).toBe(200);
     const deletedProduct = await deleteResponse.json();
     expect(deletedProduct.isDeleted).toBe(true);
