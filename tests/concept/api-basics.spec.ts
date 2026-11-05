@@ -29,3 +29,52 @@ test('POST a new post from to JSONPlaceholder', async ({ request }) => {
 
 
 })
+
+test('login to DummyJSON and receive a token', async ({ request }) => {
+    const loginResponse = await request.post('https://dummyjson.com/auth/login',
+        {
+            data: {
+                username: 'emilys', 
+                password: 'emilyspass', 
+            },
+        }
+
+    )
+    expect(loginResponse.status()).toBe(200);
+
+    const loginData = await loginResponse.json();
+    console.log(loginData.accessToken)
+});
+
+// Request Chaining And Authentication
+test('use token to access protected endpoint', async ({ request }) => {
+    const loginResponse = await request.post('https://dummyjson.com/auth/login',
+        {
+            data: {
+                username: 'emilys',
+                password: 'emilyspass',
+            },
+        }
+
+    )
+    expect(loginResponse.status()).toBe(200);
+
+    const loginData = await loginResponse.json();
+    // console.log(loginData.accessToken)
+
+    const { accessToken } = loginData
+
+    const response = await request.get("https://dummyjson.com/auth/me",
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+
+        }
+    )
+
+    expect(response.status()).toBe(200);
+    const responseData =await response.json()
+    console.log(responseData)
+
+});
