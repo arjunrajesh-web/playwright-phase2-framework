@@ -136,7 +136,8 @@ test('complete CRUD workflow', async ({ request }) => {
 
     // update
 
-    const responseUpdate = await request.put(`https://dummyjson.com/products/${id}`,
+    // const responseUpdate = await request.put(`https://dummyjson.com/products/${id}`,
+    const responseUpdate = await request.put(`https://dummyjson.com/products/1`,
         {
             data: {
 
