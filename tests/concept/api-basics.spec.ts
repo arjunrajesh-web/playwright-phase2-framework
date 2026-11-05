@@ -112,6 +112,7 @@ import { test, expect } from '@playwright/test';
 // FULL CRUD Workflow
 
 test('complete CRUD workflow', async ({ request }) => {
+    // CREATE
 
     const createResponse = await request.post('https://dummyjson.com/products/add',
         {
@@ -121,6 +122,41 @@ test('complete CRUD workflow', async ({ request }) => {
                 stock: 10
             }
         })
+
+    expect(createResponse.status()).toBe(201)
+
+    const { id } = await createResponse.json();
+    // console.log(responseData)
+
+    // READ
+
+    // const responseRead = request.get(`https://dummyjson.com/products/${id}`)
+    const responseRead = request.get("https://dummyjson.com/products/1")
+    expect((await responseRead).status()).toBe(200)
+
+    // update
+
+    const responseUpdate = await request.put(`https://dummyjson.com/products/${id}`,
+        {
+            data: {
+
+                price: 30.99
+            }
+        }
+    )
+
+    expect(responseUpdate.status()).toBe(200)
+    const updatedProduct = await responseUpdate.json()
+    expect(updatedProduct.price).toBe(30.99)
+
+
+    // delete
+
+    const deleteResponse = await request.delete( `https://dummyjson.com/products/${id}` );
+    expect(deleteResponse.status()).toBe(200);
+    const deletedProduct = await deleteResponse.json();
+    expect(deletedProduct.isDeleted).toBe(true);
+
 
 })
 
