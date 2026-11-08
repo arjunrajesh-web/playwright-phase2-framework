@@ -6,6 +6,7 @@ dotenv.config({ quiet: true });
 if (!process.env.BASE_URL) throw new Error('BASE_URL is not set');
 if (!process.env.DEMO_USER) throw new Error('DEMO_USER is not set');
 if (!process.env.DEMO_PASS) throw new Error('DEMO_PASS is not set');
+if (!process.env.API_BASE_URL) throw new Error('API_BASE_URL is not set');
 
 const isCI = !!process.env.CI;
 

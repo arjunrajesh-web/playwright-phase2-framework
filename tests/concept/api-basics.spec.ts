@@ -111,54 +111,70 @@ import { test, expect } from '@playwright/test';
 
 // FULL CRUD Workflow
 
-test('complete CRUD workflow', async ({ request }) => {
-    // CREATE
+// test('complete CRUD workflow', async ({ request }) => {
+//     // CREATE
 
-    const createResponse = await request.post('https://dummyjson.com/products/add',
-        {
-            data: {
-                title: 'test product',
-                price: 29.9,
-                stock: 10
-            }
-        })
+//     const createResponse = await request.post('https://dummyjson.com/products/add',
+//         {
+//             data: {
+//                 title: 'test product',
+//                 price: 29.9,
+//                 stock: 10
+//             }
+//         })
 
-    expect(createResponse.status()).toBe(201)
+//     expect(createResponse.status()).toBe(201)
 
-    const { id } = await createResponse.json();
-    // console.log(responseData)
+//     const { id } = await createResponse.json();
+//     // console.log(responseData)
 
-    // READ
+//     // READ
 
-    // const responseRead = request.get(`https://dummyjson.com/products/${id}`)
-    const responseRead = request.get("https://dummyjson.com/products/1")
-    expect((await responseRead).status()).toBe(200)
+//     // const responseRead = request.get(`https://dummyjson.com/products/${id}`)
+//     const responseRead = request.get("https://dummyjson.com/products/1")
+//     expect((await responseRead).status()).toBe(200)
 
-    // update
+//     // update
 
-    // const responseUpdate = await request.put(`https://dummyjson.com/products/${id}`,
-    const responseUpdate = await request.put(`https://dummyjson.com/products/1`,
-        {
-            data: {
+//     // const responseUpdate = await request.put(`https://dummyjson.com/products/${id}`,
+//     const responseUpdate = await request.put(`https://dummyjson.com/products/1`,
+//         {
+//             data: {
 
-                price: 30.99
-            }
-        }
-    )
+//                 price: 30.99
+//             }
+//         }
+//     )
 
-    expect(responseUpdate.status()).toBe(200)
-    const updatedProduct = await responseUpdate.json()
-    expect(updatedProduct.price).toBe(30.99)
+//     expect(responseUpdate.status()).toBe(200)
+//     const updatedProduct = await responseUpdate.json()
+//     expect(updatedProduct.price).toBe(30.99)
 
 
-    // delete
+//     // delete
 
     
-    // const deleteResponse = await request.delete( `https://dummyjson.com/products/${id}` );
-    const deleteResponse = await request.delete( `https://dummyjson.com/products/1`);
-    expect(deleteResponse.status()).toBe(200);
-    const deletedProduct = await deleteResponse.json();
-    expect(deletedProduct.isDeleted).toBe(true);
+//     // const deleteResponse = await request.delete( `https://dummyjson.com/products/${id}` );
+//     const deleteResponse = await request.delete( `https://dummyjson.com/products/1`);
+//     expect(deleteResponse.status()).toBe(200);
+//     const deletedProduct = await deleteResponse.json();
+//     expect(deletedProduct.isDeleted).toBe(true);
+
+
+// })
+
+import { createApiContext } from '../../helpers/api.helper';
+
+test("get using reuseable API Hepler",async()=>{
+     
+    const apicontext = await createApiContext ()
+
+    const response = await apicontext.get('/products/1')
+
+    expect(response.status()).toBe(200)
+
+   const product =  await response.json()
+   expect(product.id).toBe(1)
 
 
 })
