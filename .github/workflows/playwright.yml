@@ -1,69 +1,44 @@
-
 name: Playwright Tests
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main, master ]
   pull_request:
-    branches:
-      - main
-
+    branches: [ main, master ]
 jobs:
   test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-    environment: BASE_URL
-    timeout-minutes: 30
-
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      DEMO_USER: ${{ secrets.DEMO_USER }}
+      DEMO_PASS: ${{ secrets.DEMO_PASS }}
+      API_BASE_URL: ${{ secrets.API_BASE_URL }}
+      WC_BASE_URL: ${{ secrets.WC_BASE_URL }}
+      WC_CONSUMER_KEY: ${{ secrets.WC_CONSUMER_KEY }}
+      WC_CONSUMER_SECRET: ${{ secrets.WC_CONSUMER_SECRET }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Run authentication setup
-        run: npx playwright test --project=setup
-        env:
-          CI: "true"
-          BASE_URL: ${{ secrets.BASE_URL }}
-          DEMO_USER: ${{ secrets.DEMO_USER }}
-          DEMO_PASS: ${{ secrets.DEMO_PASS }}
-
-      - name: Upload login debug screenshot
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: login-debug
-          path: test-results/after-login.png
-          if-no-files-found: ignore
-
-      - name: Verify authentication state file
-        run: |
-          ls -la auth/
-          test -f auth/storageState.json
-
-      - name: Run Playwright tests
-        run: npx playwright test --project=chromium
-        env:
-          CI: "true"
-          BASE_URL: ${{ secrets.BASE_URL }}
-          DEMO_USER: ${{ secrets.DEMO_USER }}
-          DEMO_PASS: ${{ secrets.DEMO_PASS }}
-
-      - name: Upload report
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test 
+        
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: test-results
+        path: test-results/
+        retention-days: 30
+   
