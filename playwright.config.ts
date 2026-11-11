@@ -1,46 +1,50 @@
-import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
+// 
+import { defineConfig } from '@playwright/test';
+import dotenv from 'dotenv'
 
-dotenv.config({ quiet: true });
+// Load environment variables 
+dotenv.config({ quiet: true })
 
-if (!process.env.BASE_URL) throw new Error('BASE_URL is not set');
-if (!process.env.DEMO_USER) throw new Error('DEMO_USER is not set');
-if (!process.env.DEMO_PASS) throw new Error('DEMO_PASS is not set');
-if (!process.env.API_BASE_URL) throw new Error('API_BASE_URL is not set');
 
-const isCI = !!process.env.CI;
+// Validate required variables at startup
+if (!process.env.BASE_URL) throw new Error('BASE_URL is not set in .env');
+if (!process.env.DEMO_USER) throw new Error('DEMO_USER is not set in .env');
+if (!process.env.DEMO_PASS) throw new Error('DEMO_PASS is not set in .env');
+if (!process.env.API_BASE_URL) throw new Error('API_BASE_URL is not set in .env');
 
-export default defineConfig({
-    testDir: './tests',
+
+
+
+export default defineConfig({ 
+    workers: process.env.CI ? 1 : undefined,
+    fullyParallel: false,
     timeout: 40 * 1000,
     expect: { timeout: 40 * 1000 },
-    forbidOnly: isCI,
-    retries:process.env.CI ? 1 : 0,
+    // globalTeardown: './global-teardown.ts',
     reporter: [['html'],['allure-playwright']],
-    use:{
-
-        screenshot:'only-on-failure',
-        video:"retain-on-failure",
-        trace:"on-first-retry"
-    },
-
+    retries:process.env.CI ? 2 : 1,
+   use:{
+    screenshot:'only-on-failure',
+    video:'retain-on-failure',
+    trace: process.env.CI ? 'on' :'on-first-retry'
+   },
     projects: [
         {
             name: 'setup',
             testDir: './helpers',
             testMatch: 'auth.setup.ts',
             use: {
-                ...devices['Desktop Chrome'],
-                headless: isCI,
-                baseURL: process.env.BASE_URL,
+                browserName: 'chromium',
+                headless: true,
             },
         },
         {
             name: 'chromium',
+            testDir: './tests',
             use: {
-                ...devices['Desktop Chrome'],
-                headless: isCI,
-                baseURL: process.env.BASE_URL,
+                browserName: 'chromium',
+                headless: true,
+                baseURL:process.env.BASE_URL
             },
             dependencies: ['setup'],
         },
